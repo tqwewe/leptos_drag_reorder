@@ -1,0 +1,18 @@
+[package]
+name = "leptos_drag_reorder"
+version = "0.1.0"
+authors = ["Ari Seyhun <ariseyhun@live.com.au>"]
+edition = "2021"
+description = "Leptos hook for draggable panels which can be rearranged."
+repository = "https://github.com/tqwewe/leptos_drag_reorder"
+license = "MIT OR Apache-2.0"
+keywords = ["leptos", "drag", "panel", "hook"]
+categories = ["wasm", "web-programming"]
+include = ["/src", "README.md"]
+
+[dependencies]
+js-sys = "0.3.70"
+leptos = "0.7.0-rc1"
+send_wrapper = "0.6.0"
+wasm-bindgen = "0.2.95"
+web-sys = { version = "0.3.70", features = ["DataTransfer", "Document", "DomRect", "Element", "NodeList"] }

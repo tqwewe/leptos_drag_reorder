@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #222;
+    }
+
+    .root {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 64px;
+    }
+
+    button {
+      display: block;
+      background-color: #BBB;
+      margin: 0 auto 8px auto;
+      border: 0;
+      padding: 8px 12px;
+      border-radius: 4px;
+    }
+
+    button:hover {
+      background-color: #999;
+    }
+
+    button:active {
+      background-color: #777;
+    }
+
+    .row {
+      display: flex;
+      flex-direction: row;
+      gap: 12px;
+    }
+
+    .column {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      gap: 12px;
+      background-color: #333;
+      padding: 16px;
+    }
+
+    .panel {
+      position: relative;
+      padding: 32px 64px;
+      background-color: #aaa;
+      border-radius: 4px;
+    }
+
+    .panel::before,
+    .panel::after {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background-color: #0ea5e9;
+      border-radius: 8px;
+    }
+
+    .panel::before {
+      top: -8px;
+    }
+
+    .panel::after {
+      bottom: -8px;
+    }
+
+    .panel--above::before {
+      content: '';
+    }
+
+    .panel--below::after {
+      content: '';
+    }
+  </style>
+</head>
+
+<body></body>
+
+</html>
