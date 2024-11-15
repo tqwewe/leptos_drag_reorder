@@ -5,4 +5,4 @@ edition = "2021"
 
 [dependencies]
 leptos = { version = "0.7.0-rc1", features = ["csr"] }
-leptos_drag_reorder = { path = "../.." }
+leptos_drag_reorder = { path = ".." }

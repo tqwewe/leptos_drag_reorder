@@ -45,6 +45,7 @@ pub enum HoverPosition {
 /// Registers a panel with drag reordering for a given ID.
 pub fn use_drag_reorder<E>(
     id: impl Into<Oco<'static, str>>,
+    transpose: bool,
 ) -> UseDragReorderReturn<
     E,
     impl Fn(bool) + Copy,
@@ -185,8 +186,16 @@ where
                             return (column, closest_dist);
                         };
                         let rect = column_ref.get_bounding_client_rect();
-                        let center_x = rect.left() + rect.width() / 2.0;
-                        let dist = (mouse_x - center_x).abs();
+                        let dist = match transpose {
+                            false => {
+                                let center_x = rect.left() + rect.width() / 2.0;
+                                (mouse_x - center_x).abs()
+                            }
+                            true => {
+                                let center_y = rect.top() + rect.height() / 2.0;
+                                (mouse_y - center_y).abs()
+                            }
+                        };
                         if dist < closest_dist {
                             (Some((i, column_ref.clone())), dist)
                         } else {
@@ -210,18 +219,26 @@ where
                             }
 
                             let rect = panel_ref.get_bounding_client_rect();
-                            let center_y = rect.top() + rect.height() / 2.0;
-                            let dist = (mouse_y - center_y).abs();
+                            let (dist, center) = match transpose {
+                                false => {
+                                    let center_y = rect.top() + rect.height() / 2.0;
+                                    ((mouse_y - center_y).abs(), center_y)
+                                }
+                                true => {
+                                    let center_x = rect.left() + rect.width() / 2.0;
+                                    ((mouse_x - center_x).abs(), center_x)
+                                }
+                            };
                             if dist < closest_dist {
-                                (Some((panel_id.clone(), panel_ref.clone(), center_y)), dist)
+                                (Some((panel_id.clone(), panel_ref.clone(), center)), dist)
                             } else {
                                 (closest_panel, closest_dist)
                             }
                         },
                     );
 
-                    let new_hover_info = if let Some((panel_id, _, center_y)) = closest_panel {
-                        if mouse_y < center_y {
+                    let new_hover_info = if let Some((panel_id, _, center)) = closest_panel {
+                        if !transpose && mouse_y < center || transpose && mouse_x < center {
                             Some(HoverInfo {
                                 column_index,
                                 panel: Some(HoveredPanel {
@@ -300,7 +317,7 @@ where
 }
 
 #[derive(Clone)]
-struct DragReorderContext {
+pub struct DragReorderContext {
     column_refs: Vec<Signal<Option<SendWrapper<web_sys::Element>>>>,
     panel_order: Vec<RwSignal<Vec<Oco<'static, str>>>>,
     currently_dragged_panel: RwSignal<Option<Oco<'static, str>>>,
@@ -322,7 +339,7 @@ struct HoveredPanel {
 
 pub fn provide_drag_reorder<const COLUMNS: usize, E>(
     panel_order: [RwSignal<Vec<Oco<'static, str>>>; COLUMNS],
-) -> [NodeRef<E>; COLUMNS]
+) -> ([NodeRef<E>; COLUMNS], DragReorderContext)
 where
     E: ElementType + 'static,
     E::Output: JsCast + Into<web_sys::Element> + Clone + 'static,
@@ -385,12 +402,13 @@ where
         }
     });
 
-    provide_context(ctx);
-
-    column_refs
-        .try_into()
-        .ok()
-        .expect("vec should be same size as array")
+    (
+        column_refs
+            .try_into()
+            .ok()
+            .expect("vec should be same size as array"),
+        ctx,
+    )
 }
 
 fn reorder_panel_order(
