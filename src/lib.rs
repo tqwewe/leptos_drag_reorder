@@ -3,7 +3,7 @@
 use std::collections::HashMap;
 
 use js_sys::Function;
-use leptos::{ev, html::ElementType, prelude::*};
+use leptos::{ev, html::ElementType, prelude::*, tachys::dom::event_target};
 use send_wrapper::SendWrapper;
 use wasm_bindgen::{prelude::Closure, JsCast};
 
@@ -165,6 +165,19 @@ where
         move |ev: ev::DragEvent| {
             currently_dragged_panel.set(Some(id.clone()));
 
+            let dragged_el = event_target::<web_sys::HtmlElement>(&ev);
+            let mouse_x = ev.client_x() as f64;
+            let mouse_y = ev.client_y() as f64;
+            let rect = dragged_el.get_bounding_client_rect();
+
+            // Calculate the center of the element
+            let center_x = rect.x() + rect.width() / 2.0;
+            let center_y = rect.y() + rect.height() / 2.0;
+
+            // Calculate the offset from the mouse position to the center of the element
+            let offset_x = mouse_x - center_x;
+            let offset_y = mouse_y - center_y;
+
             // Necessary for firefox to emit drag events
             if let Some(data_transfer) = ev.data_transfer() {
                 let _ = data_transfer.set_data("text/plain", &id);
@@ -175,8 +188,8 @@ where
             let on_dragover: Function = Closure::wrap(Box::new(move |ev: web_sys::DragEvent| {
                 ev.prevent_default();
 
-                let mouse_x = ev.client_x() as f64;
-                let mouse_y = ev.client_y() as f64;
+                let mouse_x = ev.client_x() as f64 - offset_x;
+                let mouse_y = ev.client_y() as f64 - offset_y;
 
                 let (closest_column, _) = column_refs.iter().enumerate().fold(
                     (None, f64::INFINITY),
