@@ -14,5 +14,13 @@ include = ["/src", "README.md"]
 js-sys = "0.3.70"
 leptos = "0.7.0-rc1"
 send_wrapper = "0.6.0"
+thaw_utils = { path = "../thaw/thaw_utils/" }
 wasm-bindgen = "0.2.95"
 web-sys = { version = "0.3.70", features = ["DataTransfer", "Document", "DomRect", "Element", "NodeList"] }
+
+
+[features]
+csr = ["leptos/csr", "thaw_utils/csr"]
+ssr = ["leptos/ssr", "thaw_utils/ssr"]
+hydrate = ["leptos/hydrate", "thaw_utils/hydrate"]
+nightly = ["leptos/nightly", "thaw_utils/nightly"]
