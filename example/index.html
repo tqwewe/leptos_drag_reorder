@@ -32,24 +32,6 @@
       background-color: #777;
     }
 
-    .row {
-      display: flex;
-      flex-direction: row;
-      gap: 12px;
-      padding: 16px;
-      margin: 16px;
-      background-color: #222;
-    }
-
-    .column {
-      display: flex;
-      flex: 1;
-      flex-direction: column;
-      gap: 12px;
-      background-color: #333;
-      padding: 16px;
-    }
-
     .panel {
       position: relative;
       padding: 32px 64px;
@@ -57,49 +39,8 @@
       border-radius: 4px;
     }
 
-    .panel::before,
-    .panel::after {
-      position: absolute;
-      background-color: #0ea5e9;
-      border-radius: 8px;
-    }
-
-    .panel.col-item::before,
-    .panel.col-item::after {
-      left: 0;
-      width: 100%;
-      height: 4px;
-    }
-
-    .panel.col-item::before {
-      top: -8px;
-    }
-
-    .panel.col-item::after {
-      bottom: -8px;
-    }
-
-    .panel.row-item::before,
-    .panel.row-item::after {
-      top: 0;
-      height: 100%;
-      width: 4px;
-    }
-
-    .panel.row-item::before {
-      left: -8px;
-    }
-
-    .panel.row-item::after {
-      right: -8px;
-    }
-
-    .panel--above::before {
-      content: '';
-    }
-
-    .panel--below::after {
-      content: '';
+    .background-info {
+        color: #999
     }
   </style>
 </head>
