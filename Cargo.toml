@@ -1,7 +1,7 @@
 [package]
 name = "leptos_drag_reorder"
-version = "0.1.1"
-authors = ["Ari Seyhun <ariseyhun@live.com.au>", "Altaks <altair61opcc@gmail.com>"]
+version = "0.1.0"
+authors = ["Ari Seyhun <ariseyhun@live.com.au>"]
 edition = "2021"
 description = "Leptos hook for draggable panels which can be rearranged."
 repository = "https://github.com/tqwewe/leptos_drag_reorder"
